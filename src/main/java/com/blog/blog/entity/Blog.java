@@ -9,34 +9,35 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name = "blog")
+@Table(name = "Blog")
 @NoArgsConstructor
-public class Blog {
+public class Blog  extends Timestamped{
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // 아이디값을 지정해주지않아도 자동으로 1씩 오름
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "title")
+    @Column(name = "title" , nullable = false)
     private String title;
 
-    @Column(name = "RegistrantName" , nullable =false)
-    private String RegistrantName;
+    @Column(name = "username" , nullable = false)
+    private String username;
 
-    @Column(name = "content")
+    @Column(name = "content" , nullable = false)
     private String content;
 
-    @Column(name = "password" , nullable =false)
+    @Column(name = "password" , nullable = false)
     private String password;
 
 
-    Blog(BlogRequestDto blogRequestDto){
+    public Blog(BlogRequestDto blogRequestDto){
         this.title = blogRequestDto.getTitle();
-        this.RegistrantName = blogRequestDto.getRegistrantName();
+        this.username = blogRequestDto.getUsername();
         this.content = blogRequestDto.getContent();
         this.password = blogRequestDto.getPassword();
     }
     public void update(BlogRequestDto blogRequestDto){
         this.title = blogRequestDto.getTitle();
         this.content = blogRequestDto.getContent();
+        this.username = blogRequestDto.getUsername();
     }
 }
