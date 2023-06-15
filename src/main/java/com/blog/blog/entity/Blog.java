@@ -3,8 +3,9 @@ package com.blog.blog.entity;
 import com.blog.blog.dto.BlogRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.NoArgsConstructor;
+
 
 @Entity
 @Getter
@@ -28,7 +29,6 @@ public class Blog  extends Timestamped{
     @Column(name = "password" , nullable = false)
     private String password;
 
-
     public Blog(BlogRequestDto blogRequestDto){
         this.title = blogRequestDto.getTitle();
         this.username = blogRequestDto.getUsername();
@@ -36,6 +36,7 @@ public class Blog  extends Timestamped{
         this.password = blogRequestDto.getPassword();
     }
     public void update(BlogRequestDto blogRequestDto){
+//        setTitle(blogRequestDto.getTitle()); 굳이 세터를 사용한다면?
         this.title = blogRequestDto.getTitle();
         this.content = blogRequestDto.getContent();
         this.username = blogRequestDto.getUsername();
