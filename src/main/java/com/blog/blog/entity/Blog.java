@@ -3,8 +3,8 @@ package com.blog.blog.entity;
 import com.blog.blog.dto.BlogRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 @Entity
@@ -29,16 +29,15 @@ public class Blog  extends Timestamped{
     @Column(name = "password" , nullable = false)
     private String password;
 
-    public Blog(BlogRequestDto blogRequestDto){
+    public Blog(BlogRequestDto blogRequestDto , User user){
         this.title = blogRequestDto.getTitle();
-        this.username = blogRequestDto.getUsername();
+        this.username = user.getUsername();
         this.content = blogRequestDto.getContent();
-        this.password = blogRequestDto.getPassword();
+        this.password = user.getPassword();
     }
-    public void update(BlogRequestDto blogRequestDto){
+    public void update(BlogRequestDto blogRequestDto ){
 //        setTitle(blogRequestDto.getTitle()); 굳이 세터를 사용한다면?
         this.title = blogRequestDto.getTitle();
         this.content = blogRequestDto.getContent();
-        this.username = blogRequestDto.getUsername();
     }
 }

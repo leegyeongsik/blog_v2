@@ -3,6 +3,7 @@ import com.blog.blog.Repository.BlogRepository;
 import com.blog.blog.dto.BlogRequestDto;
 import com.blog.blog.dto.BlogResponseDto;
 import com.blog.blog.entity.Blog;
+import com.blog.blog.entity.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,8 +15,8 @@ public class BlogService {
         this.blogRepository = blogRepository;
     }
 
-    public BlogResponseDto createBlog(BlogRequestDto blogRequestDto) {
-        Blog blog = new Blog(blogRequestDto);
+    public BlogResponseDto createBlog( User user ,BlogRequestDto blogRequestDto) {
+        Blog blog = new Blog(blogRequestDto , user);
         Blog saveblog = blogRepository.save(blog);
         return new BlogResponseDto(saveblog);
     }
@@ -29,18 +30,18 @@ public class BlogService {
         return new BlogResponseDto(blog);
     }
     @Transactional
-    public Blog updatePost(Long id, BlogRequestDto blogRequestDto) {
+    public Blog updatePost( BlogRequestDto blogRequestDto , Long id , User user) {
         Blog blog = findName(id);
-        confirmPwd(blog , blogRequestDto);
+        confirmTokenId(blog  , user);
         blog.update(blogRequestDto);
         return blog; // 여기서 커밋을 끝나야지만 테이블값이 변경되는거라서 수정됬다고 여겨지지않아 바뀐시간이 그대로
                     // -> commit 이 되어야만 값이 바뀐다고 생각해서 일단 커밋보내놓고 주소를 controller 에 보냄
     }
 
 
-    public String deletePost(Long id, BlogRequestDto blogRequestDto) {
+    public String deletePost(Long id , User user) {
         Blog blog = findName(id);
-        confirmPwd(blog , blogRequestDto);
+        confirmTokenId(blog  , user);
         blogRepository.delete(blog);
         return "삭제 성공";
     }
@@ -50,11 +51,11 @@ public class BlogService {
                 new IllegalArgumentException("게시글이 존재하지 않습니다")
         );
     }
-    private void confirmPwd(Blog blog , BlogRequestDto blogRequestDto){
-        if (blog.getPassword().equals(blogRequestDto.getPassword())){
-            System.out.println("비밀번호가 일치합니다 ");
+    private void confirmTokenId(Blog blog , User user){
+        if (blog.getUsername().equals(user.getUsername())){
+            System.out.println("작성한 글이 맞습니다");
         } else {
-            throw new IllegalArgumentException("비밀번호가 일치하지않습니다");
-        }
+            throw new IllegalArgumentException("해당 유저가 작성한글이 아닙니다"); // 문제점 : context의 user의 값과 blog의 user의 값이 다를때 exception을 보내는데
+        }                                                                    // 보낸후에 계속 select로 해당 user를 찾음
     }
 }
